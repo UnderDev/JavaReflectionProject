@@ -20,7 +20,7 @@ import java.util.jar.JarInputStream;
 public class Introspection {
 
 	private Map <Class<?>, List<Class<?>>> graph = new HashMap<>();
-	private static String pathToJar = "C:/Users/scott/Desktop/New folder/G00316578/string-service.jar";
+	private static String pathToJar = "C:/Users/scott/Desktop/TestJar.jar";
 	
 	public static void readJar(){
 		try {
@@ -38,7 +38,7 @@ public class Introspection {
 				}
 				next = in.getNextJarEntry();
 				try {
-					//getClasses(next.getName());
+					getClasses(next.getName());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
