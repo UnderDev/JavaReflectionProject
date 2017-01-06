@@ -14,9 +14,24 @@ public class Stability {
 	private Map<Class<?>, Double> efferentMapTotal = new HashMap<Class<?>, Double>();
 
 	private Map<Class<?>, List<Class<?>>> afferentSet = new HashMap<Class<?>, List<Class<?>>>();
-	private Map<Class<?>, List<Class<?>>> efferentSet = new HashMap<Class<?>, List<Class<?>>>();
+	private Map<Class<?>, List<Class<?>>> efferentSet ;
+	
+	public void setEfferentSet(Map<Class<?>, List<Class<?>>> efferentSet) {
+		this.efferentSet = efferentSet;
+	}
 
-	private void fillCeCaLists() {
+	public Map<Class<?>, List<Class<?>>> getAfferentSet() {
+		return afferentSet;
+	}
+
+	public Map<Class<?>, List<Class<?>>> getEfferentSet() {
+		return efferentSet;
+	}
+
+	
+	
+
+	public void fillCeCaLists() {
 		List<Class<?>> classList;
 		for (Entry<Class<?>, List<Class<?>>> entry : efferentSet.entrySet()) {
 
@@ -37,12 +52,12 @@ public class Stability {
 		}
 	}
 
-	private void getStability() {
+	public double calculateStability(Entry<Class<?>, List<Class<?>>> cls) {
 		double Ca = 0;
 		double Ce = 0;
 		double posStability = 0;
 
-		for (Entry<Class<?>, List<Class<?>>> cls : graph.entrySet()) {
+		//for (Entry<Class<?>, List<Class<?>>> cls : graph.entrySet()) {
 
 			if (afferentMapTotal.get(cls) != null)
 				Ca = afferentMapTotal.get(cls).doubleValue();
@@ -55,7 +70,8 @@ public class Stability {
 				posStability = 0;
 
 			System.out.println("\nClass Name : " + cls.getKey().getName() + "\nStability = " + posStability);
-		}
+		//}
+			return posStability;
 	}
 
 }

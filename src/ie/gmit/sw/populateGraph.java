@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class FillGraph {
+public class populateGraph {
 
 	private List<Class<?>> classList;
 	private Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();
 	
-	public void getRelatedClasses() {
-
+	public void getRelatedClasses() {	
 		// For Each Loop to get all the keys from the HashMap
 		for (Entry<Class<?>, List<Class<?>>> entry : graph.entrySet()) {
 
@@ -31,7 +30,8 @@ public class FillGraph {
 
 		}
 		//efferentSet = graph;
-		//fillCeCaLists();
+		//stab.setEfferentSet(graph);
+		//stab.fillCeCaLists();
 		//getStability();// Stability Per Class
 	}
 

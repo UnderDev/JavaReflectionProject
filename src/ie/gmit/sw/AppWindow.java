@@ -69,7 +69,7 @@ public class AppWindow {
 				} catch (Exception e) {
 					//PRINT ERROR TO USER ITS NOT A JAR
 				}
-				FillGraph populate = new FillGraph();
+				populateGraph populate = new populateGraph();
 				populate.getRelatedClasses();				
 			}
 		});
