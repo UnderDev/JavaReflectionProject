@@ -19,6 +19,7 @@ import java.util.jar.JarFile;
 
 public class ReflectionApi {
 	private Class<?> c;
+	
 	private static Map<Class, List<Class>> graph = new HashMap<Class, List<Class>>();
 
 	// New folder/G00316578/string-service
@@ -26,8 +27,7 @@ public class ReflectionApi {
 
 	private static List<Class> tempClassList = new ArrayList<Class>();
 	private static List<Class> classList;
-	
-	
+
 	private static HashSet<Class> afferentSet = new HashSet<Class>();
 	private static HashSet<Class> efferentSet = new HashSet<Class>();
 
@@ -65,7 +65,7 @@ public class ReflectionApi {
 			// --------------- ADD THE CLASS(KEY) TO THE MAP + ANY ASSOIATED
 			// CLASSES(LIST)
 
-			//new ReflectionApi(cls);
+			// new ReflectionApi(cls);
 
 			buildGraph(cls);
 		}
@@ -95,6 +95,7 @@ public class ReflectionApi {
 		tempClassList.add(cls);
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void getRelatedClasses() {
 
 		// For Each Loop to get all the keys from the HashMap
@@ -104,44 +105,44 @@ public class ReflectionApi {
 			classList = new ArrayList<Class>();
 
 			// Loop over each class in the temporary List of classes
-			for (Class<?> c : tempClassList) {
+			// for (Class<?> c : tempClassList) {
 
-				/*
-				 * Check to see if the current class c "Looped" in tempClassList
-				 * has and instance of the current class from the graph HashMap.
-				 * Afferent + Efferent And dont count Entries of the same name
-				 * eg. class1 = class1
-				 */
-				if ((c.isAssignableFrom(entry.getKey()) || entry.getKey().isAssignableFrom(c)) && c != entry.getKey()) {
+			/*
+			 * Check to see if the current class c "Looped" in tempClassList has
+			 * and instance of the current class from the graph HashMap.
+			 * Afferent + Efferent And dont count Entries of the same name eg.
+			 * class1 = class1
+			 */
 
-					if (c.isAssignableFrom(entry.getKey())){
-						afferent++;
-						afferentSet.add(c);
-					}
-					
-					else{
-						efferent++;
-						efferentSet.add(c);
-					}
+			// ------------------------------- INTERFACE EXTENDS/IMPLEMENTS
+			// ETC ---------------------------------------------
+			/*
+			 * if ((c.isAssignableFrom(entry.getKey()) ||
+			 * entry.getKey().isAssignableFrom(c)) && c != entry.getKey()) {
+			 * 
+			 * if (c.isAssignableFrom(entry.getKey())) { afferent++;
+			 * afferentSet.add(c); }
+			 * 
+			 * else { efferent++; efferentSet.add(c); }
+			 * 
+			 * // Add class to list classList.add(c);
+			 * 
+			 * // Update/overWrite the hashMap every time the list gets //
+			 * updated graph.put(entry.getKey(), classList); }
+			 */
+			// ------------------------------------------------------------------------------------------------------
+			try {
+				printFields(entry);
+				printMethods(entry);
+				printConstructors(entry);
 
-					// Add class to list
-					classList.add(c);
-
-					// Update/overWrite the hashMap every time the list gets
-					// updated
-					graph.put(entry.getKey(), classList);
-				}
-				
-				printFields(entry,c);
-				
-				
-				
-				
-				
-				
-
+			System.out.println("\n" + entry.getKey().getSimpleName() + "\n" + classList);
+			} catch (NoClassDefFoundError e) {
 			}
-			getStability(entry.getKey());// Stability Per Class
+			
+
+			// }
+			// getStability(entry.getKey());// Stability Per Class
 		}
 		// getStability();//Stability Per Jar
 
@@ -151,7 +152,7 @@ public class ReflectionApi {
 
 		// try catch in case both CA / CE = 0
 		try {
-			posStability = efferent / (afferent + efferent );
+			posStability = efferent / (afferent + efferent);
 			if (posStability != posStability)// gets rid of NaN Value
 				posStability = 0;
 		} catch (Exception e) {
@@ -183,80 +184,92 @@ public class ReflectionApi {
 		System.out.println("Package: " + pack.getName());
 		System.out.println("Iterface?: " + c.isInterface());
 		try {
-			printInterfaces();
-			printConstructors();
-			//printFields();
-			printMethods();
+			// printInterfaces();
+			// printConstructors();
+			// printFields();
+			// printMethods();
 		} catch (NoClassDefFoundError e) {
 		}
 	}
 
-	private void printConstructors() throws NoClassDefFoundError {
-		Constructor<?> ctorlist[] = c.getDeclaredConstructors();
-		System.out.println("-------------- " + ctorlist.length + " Constructors --------------");
+	private static void printConstructors(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
+		Constructor<?> ctorlist[] = entry.getKey().getDeclaredConstructors();
+
+		// System.out.println("-------------- " + ctorlist.length + "
+		// Constructors --------------");
+
 		for (int i = 0; i < ctorlist.length; i++) {
 			Constructor<?> ct = ctorlist[i];
-			System.out.println("\tname  = " + ct.getName());
-			System.out.println("\tdecl class = " + ct.getDeclaringClass());
+			// System.out.println("\tname = " + ct.getName());
+			// System.out.println("\tdecl class = " + ct.getDeclaringClass());
 
 			Class<?> pvec[] = ct.getParameterTypes();
 			for (int j = 0; j < pvec.length; j++) {
-				System.out.println("\tparam #" + j + " " + pvec[j]);
-			}
+				// System.out.println("\tparam #" + j + " " + pvec[j]);
+				// System.out.println(pvec[j].getName());
+				// IF ITS A .JAVA (IMPORT ETC) CONTINUE
+				if (pvec[j].toString().startsWith("class java.") || pvec[j].isPrimitive() || pvec[j].isArray()
+						|| classList.contains(pvec[j]))
+					continue;
 
-			Class<?> evec[] = ct.getExceptionTypes();
-			for (int j = 0; j < evec.length; j++) {
-				System.out.println("\texc #" + j + " " + evec[j]);
+				classList.add(pvec[j]);
+				graph.put(entry.getKey(), classList);
 			}
 		}
 	}
 
-	private static void printFields(Entry<Class, List<Class>> entry, Class<?> c2) {
-		Field fieldlist[] = c2.getDeclaredFields();
-		//System.out.println("\n\t------ " + fieldlist.length + " Fields ------");
+	private static void printFields(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
+
+		Field fieldlist[] = entry.getKey().getDeclaredFields();
+		// System.out.println("\n\t------ " + fieldlist.length + " Fields
+		// ------");
+
 		for (int i = 0; i < fieldlist.length; i++) {
 			Field fld = fieldlist[i];
-			//System.out.println("\tname = " + fld.getName());
-			System.out.println("\tdecl class = " + fld.getDeclaringClass());
-			System.out.println("\ttype = " + fld.getType());
-			int mod = fld.getModifiers();
-			//System.out.println("\tmodifiers = " + Modifier.toString(mod));
-			//System.out.println("\t-----\n");	
-			if(fld.getType().toString().startsWith("class java.")) 
+			// IF ITS A .JAVA (IMPORT ETC) CONTINUE
+			if (fld.getType().toString().startsWith("class java.") || fld.getType().isPrimitive()
+					|| fld.getType().isArray())
 				continue;
-			
-			if(fld.getType().isAssignableFrom(entry.getKey())){
-				efferent++;
-				efferentSet.add(fld.getType());
-				System.out.println(efferentSet);
-			}
-			
-			
-			if(entry.getKey().isAssignableFrom(fld.getType())){
-				afferent++;
-				afferentSet.add(fld.getType());
-				System.out.println(afferentSet);
-			}
+
+			classList.add(fld.getType());
+			graph.put(entry.getKey(), classList);
 		}
 	}
 
-	private void printMethods() {
-		Method methlist[] = c.getDeclaredMethods();
-		System.out.println("-------------- " + methlist.length + " Methods --------------");
+	private static void printMethods(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
+		Method methlist[] = entry.getKey().getDeclaredMethods();
+
+		// System.out.println("-------------- " + methlist.length + " Methods
+		// --------------");
+
 		for (int i = 0; i < methlist.length; i++) {
 			Method m = methlist[i];
-			System.out.println("\tname = " + m.getName());
-			System.out.println("\tdecl class = " + m.getDeclaringClass());
+			// System.out.println("\tname = " + m.getName());
+			// System.out.println("\tdecl class = " + m.getDeclaringClass());
 			Class<?> pvec[] = m.getParameterTypes();
+
 			for (int j = 0; j < pvec.length; j++) {
-				System.out.println("\tparam #" + j + " " + pvec[j]);
+				// System.out.println("\tparam #" + j + " " + pvec[j]);
+				// System.out.println(pvec[j].getName().toString());
+				// IF ITS A .JAVA (IMPORT ETC) CONTINUE
+				if (pvec[j].getName().startsWith("java.") || classList.contains(pvec[j]) || pvec[j].isArray()
+						|| pvec[j].isPrimitive())
+					continue;
+
+				classList.add(pvec[j]);
+				graph.put(entry.getKey(), classList);
 			}
-			Class<?> evec[] = m.getExceptionTypes();
-			for (int j = 0; j < evec.length; j++) {
-				System.out.println("\texc #" + j + " " + evec[j]);
-			}
-			System.out.println("\treturn type = " + m.getReturnType());
-			System.out.println("\t-----\n");
+			// Class<?> evec[] = m.getExceptionTypes();
+
+			if (m.getReturnType().getName().startsWith("java.") || classList.contains(m.getReturnType())
+					|| m.getReturnType().isArray() || m.getReturnType().isPrimitive())
+				continue;
+
+			classList.add(m.getReturnType());
+			graph.put(entry.getKey(), classList);
+
+			// System.out.println("\treturn type = " + m.getReturnType());
+			// System.out.println("\t-----\n");
 		}
 	}
 
