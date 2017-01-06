@@ -34,9 +34,9 @@ public class ReflectionApi {
 	private static Map<Class, List<Class>> efferentSet = new HashMap<Class, List<Class>>();
 	// private static HashSet<Class> efferentSet = new HashSet<Class>();
 
-	//private static double afferent = 0;
-	private static Map<Class, Double> afferent= new HashMap<Class, Double>();
-	private static Map<Class, Double> efferent= new HashMap<Class, Double>();
+	// private static double afferent = 0;
+	private static Map<Class, Double> afferentMapTotal = new HashMap<Class, Double>();
+	private static Map<Class, Double> efferentMapTotal = new HashMap<Class, Double>();
 
 	public static void main(String args[]) throws Exception {
 		Class<?> cls = null;
@@ -110,36 +110,33 @@ public class ReflectionApi {
 				scanMethods(entry);
 				scanConstructors(entry);
 				scanInterfaces(entry);
-
-				//System.out.println("\n" + entry.getKey().getSimpleName() + "\n" + classList);
 			} catch (NoClassDefFoundError e) {
 			}
 
-			// }
-			// getStability(entry.getKey());// Stability Per Class
 		}
-		setEfferent();
+		efferentSet = graph;
 		fillCeCaLists();
-		getStability();//Stability Per Class
-
+		getStability();// Stability Per Class
 	}
 
 	private static void getStability() {
-		double Ca=0;
-		double Ce=0;
+		double Ca = 0;
+		double Ce = 0;
 		double posStability = 0;
-		for (Class cls : tempClassList) {				
-				if(afferent.get(cls)!=null)
-				Ca = afferent.get(cls).doubleValue();
-				
-				Ce = efferent.get(cls).doubleValue();
-				
-				posStability = Ce / (Ca + Ce);
-				if (posStability != posStability)
-					posStability = 0;
+		for (Class cls : tempClassList) {
 
-			System.out.println("\nClass Name : " + cls.getName() + "\nStability = " + posStability);		
-		}	
+			if (afferentMapTotal.get(cls) != null)
+				Ca = afferentMapTotal.get(cls).doubleValue();
+
+			if (efferentMapTotal.get(cls) != null)
+				Ce = efferentMapTotal.get(cls).doubleValue();
+
+			posStability = Ce / (Ca + Ce);
+			if (posStability != posStability)
+				posStability = 0;
+
+			System.out.println("\nClass Name : " + cls.getName() + "\nStability = " + posStability);
+		}
 	}
 
 	/*
@@ -153,7 +150,6 @@ public class ReflectionApi {
 	 * 
 	 * System.out.println("\nStability = " + posStability); }
 	 */
-
 	private void printReflection(Class<?> c) {
 		Package pack = c.getPackage(); // Get the package
 		boolean iface = c.isInterface(); // Is it an interface?
@@ -170,6 +166,8 @@ public class ReflectionApi {
 		}
 	}
 
+	
+	
 	private static void scanConstructors(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
 		Constructor<?> ctorlist[] = entry.getKey().getDeclaredConstructors();
 
@@ -241,7 +239,7 @@ public class ReflectionApi {
 		for (int i = 0; i < inf.length; i++) {
 			Class<?> m = inf[i];
 
-			//System.out.println("\tInterface Name = " + m.getName() + "\n");
+			// System.out.println("\tInterface Name = " + m.getName() + "\n");
 			if (inf[i].getName().startsWith("java."))
 				continue;
 
@@ -250,7 +248,6 @@ public class ReflectionApi {
 				classList.add(inf[i]);
 				graph.put(entry.getKey(), classList);
 			}
-
 		}
 	}
 
@@ -258,23 +255,19 @@ public class ReflectionApi {
 
 		for (Entry<Class, List<Class>> entry : efferentSet.entrySet()) {
 			for (Class<?> c : tempClassList) {
-			
+
 				if (entry.getValue().contains(c)) {
 					classList = new ArrayList<Class>();
 					classList.add(entry.getKey());
-					if(afferentSet.containsKey(c) && !afferentSet.containsValue(c))
-					classList.addAll(afferentSet.get(c));
 					
+					if (afferentSet.containsKey(c) && !afferentSet.containsValue(c))
+						classList.addAll(afferentSet.get(c));
+
 					afferentSet.put(c, classList);
-					afferent.put(c, (double) classList.size());
-				}			
+					afferentMapTotal.put(c, (double) classList.size());
+				}
 			}
-			efferent.put(entry.getKey(), (double) entry.getValue().size());
+			efferentMapTotal.put(entry.getKey(), (double) entry.getValue().size());
 		}
 	}
-
-	private static void setEfferent() {
-		efferentSet = graph;		
-	}
-
 }
