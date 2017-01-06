@@ -23,17 +23,20 @@ public class ReflectionApi {
 	private static Map<Class, List<Class>> graph = new HashMap<Class, List<Class>>();
 
 	// New folder/G00316578/string-service
-	private static String pathToJar = "C:/Users/scott/Desktop/New folder/G00316578/string-service.jar";
+	private static String pathToJar = "C:/Users/scott/Desktop/TestJar.jar";
 
 	private static List<Class> tempClassList = new ArrayList<Class>();
 	private static List<Class> classList;
 
-	private static HashSet<Class> afferentSet = new HashSet<Class>();
-	private static HashSet<Class> efferentSet = new HashSet<Class>();
+	private static Map<Class, List<Class>> afferentSet = new HashMap<Class, List<Class>>();
+	// private static HashSet<Class> afferentSet = new HashSet<Class>();
 
-	private static double afferent = 0;
-	private static double efferent = 0;
-	private static double posStability = 0;
+	private static Map<Class, List<Class>> efferentSet = new HashMap<Class, List<Class>>();
+	// private static HashSet<Class> efferentSet = new HashSet<Class>();
+
+	//private static double afferent = 0;
+	private static Map<Class, Double> afferent= new HashMap<Class, Double>();
+	private static Map<Class, Double> efferent= new HashMap<Class, Double>();
 
 	public static void main(String args[]) throws Exception {
 		Class<?> cls = null;
@@ -71,9 +74,7 @@ public class ReflectionApi {
 		}
 
 		getRelatedClasses();
-		// --------------- CALCUALTE AFFERENT COUPLINGS -> CA
-		// --------------- CALCUALTE EFFERENT COUPLINGS -> CE
-		// --------------- CALCULATE STABILITY FOR CLASS -> (CE / CA+CE)
+
 		System.out.println("Finished");
 	}
 
@@ -104,64 +105,41 @@ public class ReflectionApi {
 			// Create a new instance of an ArrayList<Class>
 			classList = new ArrayList<Class>();
 
-			// Loop over each class in the temporary List of classes
-			// for (Class<?> c : tempClassList) {
-
-			/*
-			 * Check to see if the current class c "Looped" in tempClassList has
-			 * and instance of the current class from the graph HashMap.
-			 * Afferent + Efferent And dont count Entries of the same name eg.
-			 * class1 = class1
-			 */
-
-			// ------------------------------- INTERFACE EXTENDS/IMPLEMENTS
-			// ETC ---------------------------------------------
-			/*
-			 * if ((c.isAssignableFrom(entry.getKey()) ||
-			 * entry.getKey().isAssignableFrom(c)) && c != entry.getKey()) {
-			 * 
-			 * if (c.isAssignableFrom(entry.getKey())) { afferent++;
-			 * afferentSet.add(c); }
-			 * 
-			 * else { efferent++; efferentSet.add(c); }
-			 * 
-			 * // Add class to list classList.add(c);
-			 * 
-			 * // Update/overWrite the hashMap every time the list gets //
-			 * updated graph.put(entry.getKey(), classList); }
-			 */
-			// ------------------------------------------------------------------------------------------------------
 			try {
-				printFields(entry);
-				printMethods(entry);
-				printConstructors(entry);
-				printInterfaces(entry);
+				scanFields(entry);
+				scanMethods(entry);
+				scanConstructors(entry);
+				scanInterfaces(entry);
 
-				System.out.println("\n" + entry.getKey().getSimpleName() + "\n" + classList);
+				//System.out.println("\n" + entry.getKey().getSimpleName() + "\n" + classList);
 			} catch (NoClassDefFoundError e) {
 			}
 
 			// }
-			getStability(entry.getKey());// Stability Per Class
+			// getStability(entry.getKey());// Stability Per Class
 		}
-		// getStability();//Stability Per Jar
+		setEfferent();
+		fillCeCaLists();
+		getStability();//Stability Per Class
 
 	}
 
-	private static void getStability(Class entry) {
+	private static void getStability() {
+		double Ca=0;
+		double Ce=0;
+		double posStability = 0;
+		for (Class cls : tempClassList) {				
+				if(afferent.get(cls)!=null)
+				Ca = afferent.get(cls).doubleValue();
+				
+				Ce = efferent.get(cls).doubleValue();
+				
+				posStability = Ce / (Ca + Ce);
+				if (posStability != posStability)
+					posStability = 0;
 
-		// try catch in case both CA / CE = 0
-		try {
-			posStability = efferent / (afferent + efferent);
-			if (posStability != posStability)// gets rid of NaN Value
-				posStability = 0;
-		} catch (Exception e) {
-		}
-
-		afferent = 0;
-		efferent = 0;
-
-		System.out.println("\nClass Name : " + entry.getName() + "\nStability = " + posStability);
+			System.out.println("\nClass Name : " + cls.getName() + "\nStability = " + posStability);		
+		}	
 	}
 
 	/*
@@ -192,22 +170,14 @@ public class ReflectionApi {
 		}
 	}
 
-	private static void printConstructors(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
+	private static void scanConstructors(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
 		Constructor<?> ctorlist[] = entry.getKey().getDeclaredConstructors();
-
-		// System.out.println("-------------- " + ctorlist.length + "
-		// Constructors --------------");
 
 		for (int i = 0; i < ctorlist.length; i++) {
 			Constructor<?> ct = ctorlist[i];
-			// System.out.println("\tname = " + ct.getName());
-			// System.out.println("\tdecl class = " + ct.getDeclaringClass());
 
 			Class<?> pvec[] = ct.getParameterTypes();
 			for (int j = 0; j < pvec.length; j++) {
-				// System.out.println("\tparam #" + j + " " + pvec[j]);
-				// System.out.println(pvec[j].getName());
-				// IF ITS A .JAVA (IMPORT ETC) CONTINUE
 				if (pvec[j].toString().startsWith("class java.") || pvec[j].isPrimitive() || pvec[j].isArray()
 						|| classList.contains(pvec[j]))
 					continue;
@@ -218,7 +188,7 @@ public class ReflectionApi {
 		}
 	}
 
-	private static void printFields(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
+	private static void scanFields(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
 
 		Field fieldlist[] = entry.getKey().getDeclaredFields();
 		// System.out.println("\n\t------ " + fieldlist.length + " Fields
@@ -226,7 +196,6 @@ public class ReflectionApi {
 
 		for (int i = 0; i < fieldlist.length; i++) {
 			Field fld = fieldlist[i];
-			// IF ITS A .JAVA (IMPORT ETC) CONTINUE
 			if (fld.getType().toString().startsWith("class java.") || fld.getType().isPrimitive()
 					|| fld.getType().isArray())
 				continue;
@@ -236,11 +205,8 @@ public class ReflectionApi {
 		}
 	}
 
-	private static void printMethods(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
+	private static void scanMethods(Entry<Class, List<Class>> entry) throws NoClassDefFoundError {
 		Method methlist[] = entry.getKey().getDeclaredMethods();
-
-		// System.out.println("-------------- " + methlist.length + " Methods
-		// --------------");
 
 		for (int i = 0; i < methlist.length; i++) {
 			Method m = methlist[i];
@@ -248,10 +214,9 @@ public class ReflectionApi {
 			// System.out.println("\tdecl class = " + m.getDeclaringClass());
 			Class<?> pvec[] = m.getParameterTypes();
 
+			// ----------------------------------- PARAMS
+			// ------------------------------------------------
 			for (int j = 0; j < pvec.length; j++) {
-				// System.out.println("\tparam #" + j + " " + pvec[j]);
-				// System.out.println(pvec[j].getName().toString());
-				// IF ITS A .JAVA (IMPORT ETC) CONTINUE
 				if (pvec[j].getName().startsWith("java.") || classList.contains(pvec[j]) || pvec[j].isArray()
 						|| pvec[j].isPrimitive())
 					continue;
@@ -259,28 +224,24 @@ public class ReflectionApi {
 				classList.add(pvec[j]);
 				graph.put(entry.getKey(), classList);
 			}
-			// Class<?> evec[] = m.getExceptionTypes();
 
+			// ----------------------------------- RETURN TYPES
+			// -------------------------------------------
 			if (m.getReturnType().getName().startsWith("java.") || classList.contains(m.getReturnType())
 					|| m.getReturnType().isArray() || m.getReturnType().isPrimitive())
 				continue;
 
 			classList.add(m.getReturnType());
 			graph.put(entry.getKey(), classList);
-
-			// System.out.println("\treturn type = " + m.getReturnType());
-			// System.out.println("\t-----\n");
 		}
 	}
 
-	private static void printInterfaces(Entry<Class, List<Class>> entry) {
+	private static void scanInterfaces(Entry<Class, List<Class>> entry) {
 		Class[] inf = entry.getKey().getInterfaces();
-		// System.out.println("\n-------------- " + inf.length + " InterFaces
-		// ---------------");
 		for (int i = 0; i < inf.length; i++) {
 			Class<?> m = inf[i];
 
-			System.out.println("\tInterface Name = " + m.getName() + "\n");
+			//System.out.println("\tInterface Name = " + m.getName() + "\n");
 			if (inf[i].getName().startsWith("java."))
 				continue;
 
@@ -291,6 +252,29 @@ public class ReflectionApi {
 			}
 
 		}
+	}
+
+	private static void fillCeCaLists() {
+
+		for (Entry<Class, List<Class>> entry : efferentSet.entrySet()) {
+			for (Class<?> c : tempClassList) {
+			
+				if (entry.getValue().contains(c)) {
+					classList = new ArrayList<Class>();
+					classList.add(entry.getKey());
+					if(afferentSet.containsKey(c) && !afferentSet.containsValue(c))
+					classList.addAll(afferentSet.get(c));
+					
+					afferentSet.put(c, classList);
+					afferent.put(c, (double) classList.size());
+				}			
+			}
+			efferent.put(entry.getKey(), (double) entry.getValue().size());
+		}
+	}
+
+	private static void setEfferent() {
+		efferentSet = graph;		
 	}
 
 }
