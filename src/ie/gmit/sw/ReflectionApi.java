@@ -19,11 +19,11 @@ import java.util.jar.JarFile;
 
 public class ReflectionApi {
 	private Class<?> c;
-	
+
 	private static Map<Class, List<Class>> graph = new HashMap<Class, List<Class>>();
 
 	// New folder/G00316578/string-service
-	private static String pathToJar = "C:/Users/scott/Desktop/TestJar.jar";
+	private static String pathToJar = "C:/Users/scott/Desktop/New folder/G00316578/string-service.jar";
 
 	private static List<Class> tempClassList = new ArrayList<Class>();
 	private static List<Class> classList;
@@ -135,14 +135,14 @@ public class ReflectionApi {
 				printFields(entry);
 				printMethods(entry);
 				printConstructors(entry);
+				printInterfaces(entry);
 
-			System.out.println("\n" + entry.getKey().getSimpleName() + "\n" + classList);
+				System.out.println("\n" + entry.getKey().getSimpleName() + "\n" + classList);
 			} catch (NoClassDefFoundError e) {
 			}
-			
 
 			// }
-			// getStability(entry.getKey());// Stability Per Class
+			getStability(entry.getKey());// Stability Per Class
 		}
 		// getStability();//Stability Per Jar
 
@@ -273,12 +273,23 @@ public class ReflectionApi {
 		}
 	}
 
-	private void printInterfaces() {
-		Class[] inf = c.getInterfaces();
-		System.out.println("\n-------------- " + inf.length + " InterFaces ---------------");
+	private static void printInterfaces(Entry<Class, List<Class>> entry) {
+		Class[] inf = entry.getKey().getInterfaces();
+		// System.out.println("\n-------------- " + inf.length + " InterFaces
+		// ---------------");
 		for (int i = 0; i < inf.length; i++) {
 			Class<?> m = inf[i];
+
 			System.out.println("\tInterface Name = " + m.getName() + "\n");
+			if (inf[i].getName().startsWith("java."))
+				continue;
+
+			if ((inf[i].isAssignableFrom(entry.getKey()) || entry.getKey().isAssignableFrom(inf[i]))
+					&& inf[i] != entry.getKey()) {
+				classList.add(inf[i]);
+				graph.put(entry.getKey(), classList);
+			}
+
 		}
 	}
 
