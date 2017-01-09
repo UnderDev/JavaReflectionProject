@@ -20,6 +20,7 @@ public class AppWindow {
 		frame.setSize(550, 500);
 		frame.setResizable(false);
 		frame.setLayout(new FlowLayout());
+		frame.setLocationRelativeTo(null); 
 
 		// The file panel will contain the file chooser
 		JPanel top = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -105,7 +106,7 @@ public class AppWindow {
 				
 				JarReader readJar = new JarReader();
 				try {
-					readJar.readInJar("C:/Users/scott/Desktop/TestJar.jar");
+					readJar.readInJar("C:/Users/scott/Desktop/string-service.jar");
 				} catch (Exception e) {
 					//PRINT ERROR TO USER ITS NOT A JAR
 				}
