@@ -8,12 +8,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * 
+ * @author Scott Coyne
+ * @Class populateGraph is used to populated the HashMap with a list of all Afferent/Efferent classes
+ */
 public class populateGraph {
 
 	private List<Class<?>> classList;
 	private Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();
-	
-	public void getRelatedClasses() {	
+
+	/**
+	 * @Method getRelatedClasses, Calls methods scanFields,scanMethods,
+	 *         scanConstructors, scanInterfaces which populated the HashMap
+	 */
+	public void getRelatedClasses() {
 		// For Each Loop to get all the keys from the HashMap
 		for (Entry<Class<?>, List<Class<?>>> entry : graph.entrySet()) {
 
@@ -27,14 +36,17 @@ public class populateGraph {
 				scanInterfaces(entry);
 			} catch (NoClassDefFoundError e) {
 			}
-
 		}
-		//efferentSet = graph;
-		//stab.setEfferentSet(graph);
-		//stab.fillCeCaLists();
-		//getStability();// Stability Per Class
 	}
 
+	/**
+	 * 
+	 * @param entry
+	 * @throws scanConstructors
+	 * @method scanFields, Loops through all the Constructors from the class
+	 *         passed in, Ignoring all primitive,arrays,java. types and adds it
+	 *         to the HashMap
+	 */
 	private void scanConstructors(Entry<Class<?>, List<Class<?>>> entry) throws NoClassDefFoundError {
 		Constructor<?> ctorlist[] = entry.getKey().getDeclaredConstructors();
 
@@ -53,12 +65,16 @@ public class populateGraph {
 		}
 	}
 
+	/**
+	 * 
+	 * @param entry
+	 * @throws NoClassDefFoundError
+	 * @method scanFields, Loops through all the Fields from the class passed
+	 *         in, Ignoring all primitive,arrays,java. types and adds it to the
+	 *         HashMap
+	 */
 	private void scanFields(Entry<Class<?>, List<Class<?>>> entry) throws NoClassDefFoundError {
-
 		Field fieldlist[] = entry.getKey().getDeclaredFields();
-		// System.out.println("\n\t------ " + fieldlist.length + " Fields
-		// ------");
-
 		for (int i = 0; i < fieldlist.length; i++) {
 			Field fld = fieldlist[i];
 			if (fld.getType().toString().startsWith("class java.") || fld.getType().isPrimitive()
@@ -70,18 +86,24 @@ public class populateGraph {
 		}
 	}
 
+	/**
+	 * 
+	 * @param entry
+	 * @throws NoClassDefFoundError
+	 * @method scanMethods, Loops through all the Methods from the class passed
+	 *         in(Params and return types only), Ignoring all
+	 *         primitive,arrays,java. types and adds it to the HashMap
+	 */
 	private void scanMethods(Entry<Class<?>, List<Class<?>>> entry) throws NoClassDefFoundError {
 		Method methlist[] = entry.getKey().getDeclaredMethods();
 
 		for (int i = 0; i < methlist.length; i++) {
 			Method m = methlist[i];
-			// System.out.println("\tname = " + m.getName());
-			// System.out.println("\tdecl class = " + m.getDeclaringClass());
 			Class<?> pvec[] = m.getParameterTypes();
 
-			// ----------------------------------- PARAMS
-			// ------------------------------------------------
+			// ------------- PARAMS -------------
 			for (int j = 0; j < pvec.length; j++) {
+				// Skip over if any of below is found
 				if (pvec[j].getName().startsWith("java.") || classList.contains(pvec[j]) || pvec[j].isArray()
 						|| pvec[j].isPrimitive())
 					continue;
@@ -90,8 +112,8 @@ public class populateGraph {
 				graph.put(entry.getKey(), classList);
 			}
 
-			// ----------------------------------- RETURN TYPES
-			// -------------------------------------------
+			// ------------- RETURN TYPES -------------
+			// Skip over if any of below is found
 			if (m.getReturnType().getName().startsWith("java.") || classList.contains(m.getReturnType())
 					|| m.getReturnType().isArray() || m.getReturnType().isPrimitive())
 				continue;
@@ -101,15 +123,24 @@ public class populateGraph {
 		}
 	}
 
-	private void scanInterfaces(Entry<Class<?>, List<Class<?>>> entry) {
+	/**
+	 * 
+	 * @param entry
+	 * @throws NoClassDefFoundError
+	 * @method scanInterfaces, Loops through all the interfaces from the class
+	 *         passed in, and checks if it isAssignableFrom the list of other
+	 *         classes. Then adds it to the HashMap
+	 */
+	private void scanInterfaces(Entry<Class<?>, List<Class<?>>> entry) throws NoClassDefFoundError {
 		Class<?>[] inf = entry.getKey().getInterfaces();
 		for (int i = 0; i < inf.length; i++) {
 			Class<?> m = inf[i];
 
-			// System.out.println("\tInterface Name = " + m.getName() + "\n");
+			// Skips if below is true
 			if (inf[i].getName().startsWith("java."))
 				continue;
 
+			// Skips if below is false
 			if ((inf[i].isAssignableFrom(entry.getKey()) || entry.getKey().isAssignableFrom(inf[i]))
 					&& inf[i] != entry.getKey()) {
 				classList.add(inf[i]);
