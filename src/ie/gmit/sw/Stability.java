@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 /**
  *  
  * @author Scott Coyne
- * @Class Stability, Is used to Calculate the Stability of Each Class Read in By JarReader from the HashMap graph.
+ * Class Stability, Is used to Calculate the Stability of Each Class Read in By JarReader from the HashMap graph.
  * The stability = Efferent / (Efferent+afferent);
  */
 public class Stability {
@@ -23,7 +23,7 @@ public class Stability {
 	private Map<Class<?>, List<Class<?>>> efferentSet ;
 	
 	/**
-	 * @Method fillCeCaLists, Fills the Efferent/Afferent Lists and the afferentMapTotal/efferentMapTotal
+	 * Method fillCeCaLists, Fills the Efferent/Afferent Lists and the afferentMapTotal/efferentMapTotal
 	 */
 	public void fillCeCaLists() {
 		List<Class<?>> classList;
@@ -49,7 +49,7 @@ public class Stability {
 	 * 
 	 * @param cls
 	 * @return
-	 * @Method Calculates the stability of a class passed in.
+	 * Method Calculates the stability of a class passed in.
 	 */
 	public double calculateStability(Entry<Class<?>, List<Class<?>>> cls) {
 		double Ca = 0.0;

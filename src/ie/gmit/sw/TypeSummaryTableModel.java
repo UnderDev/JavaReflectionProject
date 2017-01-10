@@ -10,7 +10,7 @@ import javax.swing.table.*;
 /**
  * 
  * @author Scott Coyne
- * @class TypeSummaryTableModel, extends AbstractTableModel and implements its
+ * class TypeSummaryTableModel, extends AbstractTableModel and implements its
  *        methods. The class is used to gather all the data read in from class
  *        JarReader in a Map, sort it, and fill a two dim array, which in turn
  *        fills a JTable located in the class AppSumary
@@ -25,7 +25,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 	private static Object[][] data;
 
 	/**
-	 * @Method gatherData, is used to get the graph(containing all the classes)
+	 * Method gatherData, is used to get the graph(containing all the classes)
 	 *         find the Efferent/Afferent between them and calculate the
 	 *         stability. Once it has the classes
 	 *         (Name,Afferent,Efferent,Stability) it adds it to an ArrayList,
@@ -66,7 +66,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 	 * 
 	 * @param clsLst
 	 * @return
-	 * @Method getClassNameList, is used to loop over all of the classes and add
+	 * Method getClassNameList, is used to loop over all of the classes and add
 	 *         there SimpleName to the list tempList
 	 */
 	private List<String> getClassNameList(List<Class<?>> clsLst) {
@@ -78,7 +78,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * @Method fillGUItable, Fills the Object[][] array with data from the
+	 * Method fillGUItable, Fills the Object[][] array with data from the
 	 *         ArrayList.
 	 */
 	private void fillGUItable() {
@@ -94,14 +94,14 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * @Method getColumnCount, returns the Column.length
+	 * Method getColumnCount, returns the Column.length
 	 */
 	public int getColumnCount() {
 		return cols.length;
 	}
 
 	/**
-	 * @Method getRowCount, returns the Row.length
+	 * Method getRowCount, returns the Row.length
 	 */
 	public int getRowCount() {
 		return data.length;
@@ -109,7 +109,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 
 	/**
 	 * @param col
-	 * @Method getColumnName, returns the Column at the position passed in
+	 * Method getColumnName, returns the Column at the position passed in
 	 */
 	public String getColumnName(int col) {
 		return cols[col];
@@ -117,7 +117,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 
 	/**
 	 * @param col,row
-	 * @Method getValueAt, returns the values at the positions passed in from
+	 * Method getValueAt, returns the values at the positions passed in from
 	 *         data
 	 */
 	public Object getValueAt(int row, int col) {
@@ -126,7 +126,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 
 	/**
 	 * @param c
-	 * @Method getColumnClass, calls the method getValueAt
+	 * Method getColumnClass, calls the method getValueAt
 	 */
 	public Class<?> getColumnClass(int c) {
 		return getValueAt(0, c).getClass();

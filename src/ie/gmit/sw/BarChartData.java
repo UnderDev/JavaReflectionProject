@@ -11,7 +11,7 @@ import java.util.Random;
 /**
  * 
  * @author Scott Coyne
- * @class BarChartData, is used to populate the ArrayList values,labels,colors
+ * class BarChartData, is used to populate the ArrayList values,labels,colors
  *        from the HashMap graph from class JarReader. Pass the List to the
  *        Constructor of the class BarChart and return the new component
  */
@@ -20,7 +20,7 @@ public class BarChartData {
 	private static Map<Class<?>, List<Class<?>>> graph;
 
 	/**
-	 * @Method fillBarChartData, Populates all the Lists needed with data to
+	 * Method fillBarChartData, Populates all the Lists needed with data to
 	 *         Create a new BarChart
 	 * @return Component.
 	 */

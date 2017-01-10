@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 /**
  * 
  * @author Scott Coyne
- * @Class populateGraph is used to populated the HashMap with a list of all Afferent/Efferent classes
+ * Class populateGraph is used to populated the HashMap with a list of all Afferent/Efferent classes
  */
 public class populateGraph {
 
@@ -19,7 +19,7 @@ public class populateGraph {
 	private Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();
 
 	/**
-	 * @Method getRelatedClasses, Calls methods scanFields,scanMethods,
+	 * Method getRelatedClasses, Calls methods scanFields,scanMethods,
 	 *         scanConstructors, scanInterfaces which populated the HashMap
 	 */
 	public void getRelatedClasses() {
@@ -43,7 +43,7 @@ public class populateGraph {
 	 * 
 	 * @param entry
 	 * @throws scanConstructors
-	 * @method scanFields, Loops through all the Constructors from the class
+	 * method scanFields, Loops through all the Constructors from the class
 	 *         passed in, Ignoring all primitive,arrays,java. types and adds it
 	 *         to the HashMap
 	 */
@@ -69,7 +69,7 @@ public class populateGraph {
 	 * 
 	 * @param entry
 	 * @throws NoClassDefFoundError
-	 * @method scanFields, Loops through all the Fields from the class passed
+	 * method scanFields, Loops through all the Fields from the class passed
 	 *         in, Ignoring all primitive,arrays,java. types and adds it to the
 	 *         HashMap
 	 */
@@ -90,7 +90,7 @@ public class populateGraph {
 	 * 
 	 * @param entry
 	 * @throws NoClassDefFoundError
-	 * @method scanMethods, Loops through all the Methods from the class passed
+	 * method scanMethods, Loops through all the Methods from the class passed
 	 *         in(Params and return types only), Ignoring all
 	 *         primitive,arrays,java. types and adds it to the HashMap
 	 */
@@ -127,7 +127,7 @@ public class populateGraph {
 	 * 
 	 * @param entry
 	 * @throws NoClassDefFoundError
-	 * @method scanInterfaces, Loops through all the interfaces from the class
+	 * method scanInterfaces, Loops through all the interfaces from the class
 	 *         passed in, and checks if it isAssignableFrom the list of other
 	 *         classes. Then adds it to the HashMap
 	 */

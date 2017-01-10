@@ -12,10 +12,9 @@ import java.util.jar.JarFile;
 
 /**
  * 
- * @author scott
- * @Class JarReader, Reads in a Jar file from the path provided by the user,
- *        breaks up all of the classes into a HashMap<Class<?>, List<Class<?>>>
- *        The HashMap is then used by other classes to provide statistics.
+ * @author Scott Coyne. Class JarReader, Reads in a Jar file from the path
+ *         provided by the user, breaks up all of the classes into a HashMap. The
+ *         HashMap is then used by other classes to provide statistics.
  *
  */
 public class JarReader {
@@ -60,8 +59,8 @@ public class JarReader {
 	/**
 	 * 
 	 * @param cls
-	 * @Method buildSkelGraph, Creates a Bean HashMap containing the class name
-	 *         and an empty list of classes related
+	 *            Method buildSkelGraph, Creates a Bean HashMap containing the
+	 *            class name and an empty list of classes related
 	 */
 	private void buildSkelGraph(Class<?> cls) {
 		// Check the list for the Class passed in.

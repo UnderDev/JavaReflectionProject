@@ -8,7 +8,7 @@ import javax.swing.table.*;
 /***
  * 
  * @author Scott Coyne.
- * @Class AppSummary, is used to create a New JTable in a new JFrame. The
+ * Class AppSummary, is used to create a New JTable in a new JFrame. The
  *        table's dimensions,properties,data is then added and displayed on
  *        screen.
  *

@@ -3,7 +3,7 @@ package ie.gmit.sw;
 /**
  * 
  * @author Scott Coyne
- * @Class Runner, Contains the Main method for running the application. It
+ * Runner, Contains the Main method for running the application. It
  *        Creates a new Runnable AppWindow GUI
  */
 public class Runner {

@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 /**
  * 
  * @author scott
- * @class BarChart, extends JPanel and implements methods. Class is used to
+ * class BarChart, extends JPanel and implements methods. Class is used to
  *        Create a new BarChart and populate it with Data from a Jar Read in
  *        previously.
  */
@@ -31,7 +31,7 @@ public class BarChart extends JPanel {
 	}
 
 	/**
-	 * @Method is used to Create/Set dimensions and populate a BarChart Adapted
+	 * Method is used to Create/Set dimensions and populate a BarChart Adapted
 	 *         From http://www.javacodex.com/Graphics/Bar-Chart
 	 */
 	public void paintComponent(Graphics g) {
