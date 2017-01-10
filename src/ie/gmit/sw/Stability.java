@@ -16,18 +16,6 @@ public class Stability {
 	private Map<Class<?>, List<Class<?>>> afferentSet = new HashMap<Class<?>, List<Class<?>>>();
 	private Map<Class<?>, List<Class<?>>> efferentSet ;
 	
-	public void setEfferentSet(Map<Class<?>, List<Class<?>>> efferentSet) {
-		this.efferentSet = efferentSet;
-	}
-
-	public Map<Class<?>, List<Class<?>>> getAfferentSet() {
-		return afferentSet;
-	}
-
-	public Map<Class<?>, List<Class<?>>> getEfferentSet() {
-		return efferentSet;
-	}
-
 	public void fillCeCaLists() {
 		List<Class<?>> classList;
 		for (Entry<Class<?>, List<Class<?>>> entry : efferentSet.entrySet()) {
@@ -68,6 +56,26 @@ public class Stability {
 			System.out.println("\nClass Name : " + cls.getKey().getName() + "\nStability = " + posStability);
 		//}
 			return posStability;
+	}
+	
+	public void setEfferentSet(Map<Class<?>, List<Class<?>>> efferentSet) {
+		this.efferentSet = efferentSet;
+	}
+
+	public Map<Class<?>, List<Class<?>>> getAfferentSet() {
+		return afferentSet;
+	}
+
+	public Map<Class<?>, List<Class<?>>> getEfferentSet() {
+		return efferentSet;
+	}
+	
+	public Map<Class<?>, Double> getAfferentMapTotal() {
+		return afferentMapTotal;
+	}
+
+	public Map<Class<?>, Double> getEfferentMapTotal() {
+		return efferentMapTotal;
 	}
 
 }

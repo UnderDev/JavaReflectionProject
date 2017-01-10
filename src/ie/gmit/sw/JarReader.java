@@ -13,7 +13,6 @@ import java.util.jar.JarFile;
 public class JarReader {
 
 	private static Map<Class<?>, List<Class<?>>> graph;
-	// private static List<Class> tempClassList = new ArrayList<Class>();
 
 	public JarReader() {
 		super();

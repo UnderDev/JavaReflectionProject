@@ -17,7 +17,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 	private static Object[][] data; 
 
 	public void gatherData() {
-		graph = JarReader.getGraph();
+		
 		rowList = new ArrayList<Object>();
 		
 		Stability stability = new Stability();
