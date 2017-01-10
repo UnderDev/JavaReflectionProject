@@ -10,6 +10,13 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * 
+ * @author Scott Coyne. Class JarReader, Reads in a Jar file from the path
+ *         provided by the user, breaks up all of the classes into a HashMap. The
+ *         HashMap is then used by other classes to provide statistics.
+ *
+ */
 public class JarReader {
 
 	private static Map<Class<?>, List<Class<?>>> graph;
@@ -21,6 +28,7 @@ public class JarReader {
 	public void readInJar(String pathToJar) throws Exception {
 		graph = new HashMap<Class<?>, List<Class<?>>>();
 		Class<?> cls = null;
+
 		int subStrLen = 6;// 6 because of .class
 
 		JarFile jarFile = new JarFile(pathToJar);
@@ -28,6 +36,7 @@ public class JarReader {
 
 		URL[] urls = { new URL("jar:file:" + pathToJar + "!/") };
 		URLClassLoader cl = URLClassLoader.newInstance(urls);
+
 		while (item.hasMoreElements()) {
 			JarEntry je = item.nextElement();
 
@@ -47,6 +56,12 @@ public class JarReader {
 		System.out.println("Jar Read In and Skeloton Graph Built");
 	}
 
+	/**
+	 * 
+	 * @param cls
+	 *            Method buildSkelGraph, Creates a Bean HashMap containing the
+	 *            class name and an empty list of classes related
+	 */
 	private void buildSkelGraph(Class<?> cls) {
 		// Check the list for the Class passed in.
 		List<Class<?>> classList = graph.get(cls);

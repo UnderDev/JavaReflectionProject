@@ -7,11 +7,19 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
+/***
+ * 
+ * @author Scott Coyne Class AppWindow, Creates a GUI using javax.Swing
+ *         components. The GUI allows the user to browse there computer for a
+ *         jar file, read it in, and provide Statistics based on the information
+ *         passed in.
+ */
+
 public class AppWindow {
 	private JFrame frame;
 	private String filePath;
 	private JButton btnBarchart;
-	private JButton btnDialog; 
+	private JButton btnDialog;
 	private JButton btnImport;
 
 	public AppWindow() {
@@ -26,7 +34,7 @@ public class AppWindow {
 
 		// The file panel will contain the file chooser
 		JPanel top = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		top.setBorder(new javax.swing.border.TitledBorder("Select Jar File"));
+		top.setBorder(new javax.swing.border.TitledBorder("Select A Jar File"));
 		top.setPreferredSize(new java.awt.Dimension(500, 70));
 		top.setMaximumSize(new java.awt.Dimension(500, 70));
 		top.setMinimumSize(new java.awt.Dimension(500, 70));
@@ -48,7 +56,7 @@ public class AppWindow {
 				JFileChooser fc = new JFileChooser("./");
 				int returnVal = fc.showOpenDialog(frame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					btnImport.setEnabled(true);//Enable Btn
+					btnImport.setEnabled(true);// Enable Btn
 					File file = fc.getSelectedFile().getAbsoluteFile();
 					String name = file.getAbsolutePath();
 					txtFileName.setText(name);
@@ -67,21 +75,25 @@ public class AppWindow {
 		btnImport.setMinimumSize(new java.awt.Dimension(150, 30));
 		btnImport.addActionListener(new java.awt.event.ActionListener() {
 
-			// -------------- READ IN JAR FILE --------------
+			/***
+			 * -------------- READ IN JAR FILE -------------- Once VALID jar is
+			 * read in, it enables all the other btns on the GUI
+			 */
+
 			public void actionPerformed(ActionEvent evt) {
 				JarReader readJar = new JarReader();
-				
+
 				try {
 					readJar.readInJar(filePath);
-					
-					//Set Viability on Btns To True
+
+					// Set Viability on Btns To True
 					btnBarchart.setEnabled(true);
 					btnDialog.setEnabled(true);
 					populateGraph populate = new populateGraph();
 					populate.getRelatedClasses();
 				} catch (Exception e) {
 					System.out.println("Error not a jar");
-					JOptionPane.showMessageDialog(null, "Incorrect Filepath: "+filePath);
+					JOptionPane.showMessageDialog(null, "Incorrect Filepath: " + filePath);
 				}
 			}
 		});
@@ -101,6 +113,7 @@ public class AppWindow {
 		btnDialog = new JButton("Show Stability Table");
 		btnDialog.setEnabled(false);
 		btnDialog.addActionListener(new java.awt.event.ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent evt) {
 				TypeSummaryTableModel tstm = new TypeSummaryTableModel();
 				tstm.gatherData();
@@ -116,11 +129,15 @@ public class AppWindow {
 			public void actionPerformed(ActionEvent evt) {
 				BarChartData data = new BarChartData();
 				JFrame bcFrame = new JFrame("Bar Chart");
-				bcFrame.setLocationRelativeTo(frame);
-				bcFrame.setSize(350, 300);
+				bcFrame.setSize(1400, 500);// Window Size
+
+				// Add New JScrollPane with the BarChart passed in
+				JScrollPane jsp = new JScrollPane(data.fillBarChartData());
+				jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+				jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 				// Get the New Bar chart
-				bcFrame.add(data.fillBarChartData());
+				bcFrame.add(jsp);
 				bcFrame.setVisible(true);
 			}
 		});

@@ -9,6 +9,13 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+/**
+ * 
+ * @author scott
+ * class BarChart, extends JPanel and implements methods. Class is used to
+ *        Create a new BarChart and populate it with Data from a Jar Read in
+ *        previously.
+ */
 public class BarChart extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private List<Double> values;
@@ -23,6 +30,10 @@ public class BarChart extends JPanel {
 		this.title = title;
 	}
 
+	/**
+	 * Method is used to Create/Set dimensions and populate a BarChart Adapted
+	 *         From http://www.javacodex.com/Graphics/Bar-Chart
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (values == null || values.size() == 0) {
@@ -45,9 +56,11 @@ public class BarChart extends JPanel {
 		int panelHeight = dim.height;
 		int barWidth = panelWidth / values.size();
 
+		// Title Font
 		Font titleFont = new Font("Book Antiqua", Font.BOLD, 15);
 		FontMetrics titleFontMetrics = g.getFontMetrics(titleFont);
 
+		// Label Font
 		Font labelFont = new Font("Book Antiqua", Font.PLAIN, 14);
 		FontMetrics labelFontMetrics = g.getFontMetrics(labelFont);
 
@@ -65,7 +78,7 @@ public class BarChart extends JPanel {
 		double scale = (panelHeight - top - bottom) / (maxValue - minValue);
 		stringHeight = panelHeight - labelFontMetrics.getDescent();
 		g.setFont(labelFont);
-		
+
 		for (int j = 0; j < values.size(); j++) {
 			int valueP = j * barWidth + 1;
 			int valueQ = top;

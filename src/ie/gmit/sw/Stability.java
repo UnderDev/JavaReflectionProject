@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ *  
+ * @author Scott Coyne
+ * Class Stability, Is used to Calculate the Stability of Each Class Read in By JarReader from the HashMap graph.
+ * The stability = Efferent / (Efferent+afferent);
+ */
 public class Stability {
 
 	private static Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();
@@ -16,6 +22,9 @@ public class Stability {
 	private Map<Class<?>, List<Class<?>>> afferentSet = new HashMap<Class<?>, List<Class<?>>>();
 	private Map<Class<?>, List<Class<?>>> efferentSet ;
 	
+	/**
+	 * Method fillCeCaLists, Fills the Efferent/Afferent Lists and the afferentMapTotal/efferentMapTotal
+	 */
 	public void fillCeCaLists() {
 		List<Class<?>> classList;
 		for (Entry<Class<?>, List<Class<?>>> entry : efferentSet.entrySet()) {
@@ -36,13 +45,16 @@ public class Stability {
 		}
 	}
 
+	/**
+	 * 
+	 * @param cls
+	 * @return
+	 * Method Calculates the stability of a class passed in.
+	 */
 	public double calculateStability(Entry<Class<?>, List<Class<?>>> cls) {
 		double Ca = 0.0;
 		double Ce = 0.0;
 		double posStability = 0.0;
-
-		//for (Entry<Class<?>, List<Class<?>>> cls : graph.entrySet()) {
-
 			if (afferentMapTotal.get(cls.getKey()) != null)
 				Ca = afferentMapTotal.get(cls.getKey()).doubleValue();
 
@@ -54,7 +66,6 @@ public class Stability {
 				posStability = 0;
 
 			System.out.println("\nClass Name : " + cls.getKey().getName() + "\nStability = " + posStability);
-		//}
 			return posStability;
 	}
 	
