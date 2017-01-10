@@ -13,13 +13,13 @@ public class BarChart extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private List<Double> values;
 	private List<String> labels;
-	private Color[] colors;
+	private List<Color> colors;
 	private String title;
 
-	public BarChart(List<Double> values2, List<String> labels2, Color[] colors, String title) {
+	public BarChart(List<Double> values2, List<String> labels2, List<Color> colors2, String title) {
 		this.labels = labels2;
 		this.values = values2;
-		this.colors = colors;
+		this.colors = colors2;
 		this.title = title;
 	}
 
@@ -65,6 +65,7 @@ public class BarChart extends JPanel {
 		double scale = (panelHeight - top - bottom) / (maxValue - minValue);
 		stringHeight = panelHeight - labelFontMetrics.getDescent();
 		g.setFont(labelFont);
+		
 		for (int j = 0; j < values.size(); j++) {
 			int valueP = j * barWidth + 1;
 			int valueQ = top;
@@ -76,7 +77,7 @@ public class BarChart extends JPanel {
 				height = -height;
 			}
 
-			g.setColor(colors[j]);
+			g.setColor(colors.get(j));
 			g.fillRect(valueP, valueQ, barWidth - 2, height);
 			g.setColor(Color.black);
 			g.drawRect(valueP, valueQ, barWidth - 2, height);

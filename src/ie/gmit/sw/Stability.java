@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 public class Stability {
 
-	private Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();
+	private static Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();
 
 	private Map<Class<?>, Double> afferentMapTotal = new HashMap<Class<?>, Double>();
 	private Map<Class<?>, Double> efferentMapTotal = new HashMap<Class<?>, Double>();
