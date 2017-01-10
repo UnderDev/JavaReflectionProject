@@ -252,7 +252,6 @@ public class ReflectionApi {
 	}
 
 	private static void fillCeCaLists() {
-
 		for (Entry<Class, List<Class>> entry : efferentSet.entrySet()) {
 			for (Class<?> c : tempClassList) {
 
