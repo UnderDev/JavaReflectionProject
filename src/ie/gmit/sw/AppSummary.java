@@ -2,6 +2,9 @@ package ie.gmit.sw;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
+import java.util.Map;
+
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -110,6 +113,9 @@ public class AppSummary extends JDialog{
 		btnClose.setIcon(new ImageIcon("images/close.gif"));
 		btnClose.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
+				JarReader graph = new JarReader();	
+				//graph.setBeanMap();
+				
 				dispose();
 			}
 		});

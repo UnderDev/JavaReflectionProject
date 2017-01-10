@@ -28,9 +28,6 @@ public class Stability {
 		return efferentSet;
 	}
 
-	
-	
-
 	public void fillCeCaLists() {
 		List<Class<?>> classList;
 		for (Entry<Class<?>, List<Class<?>>> entry : efferentSet.entrySet()) {

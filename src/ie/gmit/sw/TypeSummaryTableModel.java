@@ -9,24 +9,20 @@ import javax.swing.table.*;
 
 public class TypeSummaryTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 777L;
-	private static Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();	
+	private static Map<Class<?>, List<Class<?>>> graph;	
 	
-	private static String[] cols = { "Class Name", "Afferent", "Efferent", "Stability" };
-	private static  List<Object> rowList;
-	
-	static {	
-		gatherData();
-	}
+	private String[] cols = { "Class Name", "Afferent", "Efferent", "Stability" };
+	private List<Object> rowList;
 	
 	private static Object[][] data; 
 
-	private static void gatherData() {
+	public void gatherData() {
+		graph = JarReader.getGraph();
 		rowList = new ArrayList<Object>();
 		
 		Stability stability = new Stability();
 		stability.setEfferentSet(graph);
 		stability.fillCeCaLists();	
-		List<String> tempList = new ArrayList<String>();
 						
 		for (Entry<Class<?>, List<Class<?>>> cls : graph.entrySet()) {
 			 String name = cls.getKey().getSimpleName();
@@ -49,7 +45,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 		fillGUItable();
 	}
 
-	private static List<String> getClassNameList(List<Class<?>> clsLst) {
+	private List<String> getClassNameList(List<Class<?>> clsLst) {
 		List<String> tempList = new ArrayList<String>();
 		
 		for (Class<?> cls : clsLst) {
@@ -58,7 +54,7 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 		return tempList;
 	}
 	
-	private static void fillGUItable(){
+	private void fillGUItable(){
 		int count = 0;
 		data = new Object[rowList.size()/cols.length][cols.length];
 		

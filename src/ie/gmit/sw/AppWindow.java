@@ -104,14 +104,9 @@ public class AppWindow {
 		btnDialog.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				
-				JarReader readJar = new JarReader();
-				try {
-					readJar.readInJar("C:/Users/scott/Desktop/string-service.jar");
-				} catch (Exception e) {
-					//PRINT ERROR TO USER ITS NOT A JAR
-				}
-				populateGraph populate = new populateGraph();
-				populate.getRelatedClasses();
+				TypeSummaryTableModel tstm = new TypeSummaryTableModel();
+				tstm.gatherData();
+
 				
 				AppSummary as = new AppSummary(frame, true);
 				as.show();
