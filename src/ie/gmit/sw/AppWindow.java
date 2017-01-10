@@ -113,6 +113,7 @@ public class AppWindow {
 		btnDialog = new JButton("Show Stability Table");
 		btnDialog.setEnabled(false);
 		btnDialog.addActionListener(new java.awt.event.ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent evt) {
 				TypeSummaryTableModel tstm = new TypeSummaryTableModel();
 				tstm.gatherData();
