@@ -9,57 +9,70 @@ import javax.swing.table.*;
 
 public class TypeSummaryTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 777L;
-	private static Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();	
+	private static Map<Class<?>, List<Class<?>>> graph;	
 	
 	private String[] cols = { "Class Name", "Afferent", "Efferent", "Stability" };
+	private List<Object> rowList;
 	
-	static {
-		rowList = new ArrayList<String[]>();
-		fillDataTable();
-	}
-	
-	
-	private static Object[][] data ;
-		/* = { 
-			{ "Stuff 1", "Other Stuff 1", "Even More Stuff 1" ," " },		
-			{ "Stuff 2", "Other Stuff 2", "Even More Stuff 2" ," " }, 
-			{ "Stuff 3", "Other Stuff 3", "Even More Stuff 3" ," " },
-			{ "Stuff 4", "Other Stuff 4", "Even More Stuff 4" ," " }, 
-			{ "Stuff 5", "Other Stuff 5", "Even More Stuff 5" ," " },
-			{ "Stuff 6", "Other Stuff 6", "Even More Stuff 6" ," " }, 
-			{ "Stuff 7", "Other Stuff 7", "Even More Stuff 7" ," " } };*/
+	private static Object[][] data; 
 
-	private static List<String[]> rowList;
-
-	    
-	
-	private static void fillDataTable(){
+	public void gatherData() {
+		graph = JarReader.getGraph();
+		rowList = new ArrayList<Object>();
+		
 		Stability stability = new Stability();
 		stability.setEfferentSet(graph);
 		stability.fillCeCaLists();	
-		
+						
 		for (Entry<Class<?>, List<Class<?>>> cls : graph.entrySet()) {
-			
 			 String name = cls.getKey().getSimpleName();
-			 String ce = "";
-			 //Map<Class<?>, List<Class<?>>> ce = stability.getEfferentSet();
+					 
+			 List<Class<?>> ce = stability.getEfferentSet().get(cls.getKey());						 
+			 List<Class<?>> ca = stability.getAfferentSet().get(cls.getKey());
+			 double stab = stability.calculateStability(cls);
+			 		 
+			 if(ca==null)
+				 ca= new ArrayList<Class<?>>();
 			 
-			 String ca = "";//stability.getAfferentSet().get(cls);
-			 String stab = "0.0";
+			 if(ce==null)
+				 ce= new ArrayList<Class<?>>();
+						 
+			 rowList.add (name);
+			 rowList.add (getClassNameList(ca));
+			 rowList.add (getClassNameList(ce));
+			 rowList.add (stab); 
+		}
+		fillGUItable();
+	}
 
-			 rowList.add(new String[] {name, ca, ce, stab});
-			  //data[0][1] = {name, ca, ce, stab};		 
-		}	
+	private List<String> getClassNameList(List<Class<?>> clsLst) {
+		List<String> tempList = new ArrayList<String>();
+		
+		for (Class<?> cls : clsLst) {
+			 tempList.add(cls.getSimpleName());			 
+		}
+		return tempList;
 	}
 	
-	
+	private void fillGUItable(){
+		int count = 0;
+		data = new Object[rowList.size()/cols.length][cols.length];
+		
+		for (int x = 0; x < rowList.size()/cols.length; x++) //run 5 times
+		{
+		    for (int y = 0; y < cols.length; y++) //
+		    {
+		    	data[x][y] = rowList.get(count++);
+		    }
+		}
+	}
 	
 	public int getColumnCount() {
 		return cols.length;
 	}
 
 	public int getRowCount() {
-		return rowList.size();
+		return data.length;
 	}
 
 	public String getColumnName(int col) {
@@ -67,11 +80,12 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 	}
 
 	public Object getValueAt(int row, int col) {
-		//rowList.get(1);
-		return rowList.get(col);
+		//System.out.println(matrix[row][col]);
+		return data[row][col];
 	}
 
 	public Class<?> getColumnClass(int c) {
+		
 		return getValueAt(0, c).getClass();
 	}
 }

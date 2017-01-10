@@ -23,7 +23,7 @@ public class ReflectionApi {
 	private static Map<Class, List<Class>> graph = new HashMap<Class, List<Class>>();
 
 	// New folder/G00316578/string-service
-	private static String pathToJar = "C:/Users/scott/Desktop/TestJar.jar";
+	private static String pathToJar = "C:/Users/scott/Desktop/String-service.jar";
 
 	private static List<Class> tempClassList = new ArrayList<Class>();
 	private static List<Class> classList;

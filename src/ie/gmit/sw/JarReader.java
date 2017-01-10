@@ -1,6 +1,5 @@
 package ie.gmit.sw;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -13,16 +12,14 @@ import java.util.jar.JarFile;
 
 public class JarReader {
 
-	private String pathToJar;
+	private static Map<Class<?>, List<Class<?>>> graph;
 
-	private static Map<Class<?>, List<Class<?>>> graph = new HashMap<Class<?>, List<Class<?>>>();
-	//private static List<Class> tempClassList = new ArrayList<Class>();
-	
 	public JarReader() {
 		super();
-	}	
+	}
 
 	public void readInJar(String pathToJar) throws Exception {
+		graph = new HashMap<Class<?>, List<Class<?>>>();
 		Class<?> cls = null;
 		int subStrLen = 6;// 6 because of .class
 
@@ -50,21 +47,21 @@ public class JarReader {
 		System.out.println("Jar Read In and Skeloton Graph Built");
 	}
 
-	private static void buildSkelGraph(Class cls) {
+	private void buildSkelGraph(Class<?> cls) {
 		// Check the list for the Class passed in.
 		List<Class<?>> classList = graph.get(cls);
 
 		// If classList is empty, Add to graph the new Class + an empty List
 		if (classList == null)
 			graph.put(cls, classList = new ArrayList<Class<?>>());
-
-		//tempClassList.add(cls);
 	}
 
 	public static Map<Class<?>, List<Class<?>>> getGraph() {
 		return graph;
 	}
 
-
+	public Map<Class<?>, List<Class<?>>> setBeanMap() {
+		return graph = new HashMap<Class<?>, List<Class<?>>>();
+	}
 
 }

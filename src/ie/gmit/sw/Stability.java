@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 public class Stability {
 
-	private Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();
+	private static Map<Class<?>, List<Class<?>>> graph = JarReader.getGraph();
 
 	private Map<Class<?>, Double> afferentMapTotal = new HashMap<Class<?>, Double>();
 	private Map<Class<?>, Double> efferentMapTotal = new HashMap<Class<?>, Double>();
@@ -16,28 +16,12 @@ public class Stability {
 	private Map<Class<?>, List<Class<?>>> afferentSet = new HashMap<Class<?>, List<Class<?>>>();
 	private Map<Class<?>, List<Class<?>>> efferentSet ;
 	
-	public void setEfferentSet(Map<Class<?>, List<Class<?>>> efferentSet) {
-		this.efferentSet = efferentSet;
-	}
-
-	public Map<Class<?>, List<Class<?>>> getAfferentSet() {
-		return afferentSet;
-	}
-
-	public Map<Class<?>, List<Class<?>>> getEfferentSet() {
-		return efferentSet;
-	}
-
-	
-	
-
 	public void fillCeCaLists() {
 		List<Class<?>> classList;
 		for (Entry<Class<?>, List<Class<?>>> entry : efferentSet.entrySet()) {
-
 			for (Entry<Class<?>, List<Class<?>>> c : graph.entrySet()) {
 
-				if (entry.getValue().contains(c)) {
+				if (entry.getValue().contains(c.getKey())) {
 					classList = new ArrayList<Class<?>>();
 					classList.add(entry.getKey());
 
@@ -53,17 +37,17 @@ public class Stability {
 	}
 
 	public double calculateStability(Entry<Class<?>, List<Class<?>>> cls) {
-		double Ca = 0;
-		double Ce = 0;
-		double posStability = 0;
+		double Ca = 0.0;
+		double Ce = 0.0;
+		double posStability = 0.0;
 
 		//for (Entry<Class<?>, List<Class<?>>> cls : graph.entrySet()) {
 
-			if (afferentMapTotal.get(cls) != null)
-				Ca = afferentMapTotal.get(cls).doubleValue();
+			if (afferentMapTotal.get(cls.getKey()) != null)
+				Ca = afferentMapTotal.get(cls.getKey()).doubleValue();
 
-			if (efferentMapTotal.get(cls) != null)
-				Ce = efferentMapTotal.get(cls).doubleValue();
+			if (efferentMapTotal.get(cls.getKey()) != null)
+				Ce = efferentMapTotal.get(cls.getKey()).doubleValue();
 
 			posStability = Ce / (Ca + Ce);
 			if (posStability != posStability)
@@ -72,6 +56,26 @@ public class Stability {
 			System.out.println("\nClass Name : " + cls.getKey().getName() + "\nStability = " + posStability);
 		//}
 			return posStability;
+	}
+	
+	public void setEfferentSet(Map<Class<?>, List<Class<?>>> efferentSet) {
+		this.efferentSet = efferentSet;
+	}
+
+	public Map<Class<?>, List<Class<?>>> getAfferentSet() {
+		return afferentSet;
+	}
+
+	public Map<Class<?>, List<Class<?>>> getEfferentSet() {
+		return efferentSet;
+	}
+	
+	public Map<Class<?>, Double> getAfferentMapTotal() {
+		return afferentMapTotal;
+	}
+
+	public Map<Class<?>, Double> getEfferentMapTotal() {
+		return efferentMapTotal;
 	}
 
 }
