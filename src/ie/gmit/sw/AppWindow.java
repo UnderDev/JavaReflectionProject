@@ -34,7 +34,7 @@ public class AppWindow {
 
 		// The file panel will contain the file chooser
 		JPanel top = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		top.setBorder(new javax.swing.border.TitledBorder("Select Jar File"));
+		top.setBorder(new javax.swing.border.TitledBorder("Select A Jar File"));
 		top.setPreferredSize(new java.awt.Dimension(500, 70));
 		top.setMaximumSize(new java.awt.Dimension(500, 70));
 		top.setMinimumSize(new java.awt.Dimension(500, 70));
